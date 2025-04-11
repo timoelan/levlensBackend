@@ -1,0 +1,109 @@
+```html
+<!doctype html>
+<html>
+    <head>
+        <title>Bild Upload</title>
+        <style>
+            #dropZone {
+                width: 300px;
+                height: 200px;
+                border: 2px dashed #ccc;
+                text-align: center;
+                padding: 20px;
+                margin: 20px;
+            }
+
+            #dropZone.dragover {
+                background: #e1e1e1;
+                border-color: #999;
+            }
+
+            #thumbnailContainer {
+                display: flex;
+                flex-wrap: wrap;
+                gap: 10px;
+                margin: 20px;
+            }
+
+            .thumbnail {
+                width: 100px;
+                height: 100px;
+                object-fit: cover;
+            }
+        </style>
+    </head>
+    <body>
+        <div id="dropZone">Bilder hier hineinziehen</div>
+        <div id="thumbnailContainer"></div>
+
+        <script>
+            const dropZone = document.getElementById("dropZone");
+            const thumbnailContainer =
+                document.getElementById("thumbnailContainer");
+
+            // Prevent default drag behaviors
+            ["dragenter", "dragover", "dragleave", "drop"].forEach(
+                (eventName) => {
+                    dropZone.addEventListener(
+                        eventName,
+                        preventDefaults,
+                        false,
+                    );
+                    document.body.addEventListener(
+                        eventName,
+                        preventDefaults,
+                        false,
+                    );
+                },
+            );
+
+            // Highlight drop zone when item is dragged over it
+            ["dragenter", "dragover"].forEach((eventName) => {
+                dropZone.addEventListener(eventName, highlight, false);
+            });
+
+            ["dragleave", "drop"].forEach((eventName) => {
+                dropZone.addEventListener(eventName, unhighlight, false);
+            });
+
+            // Handle dropped files
+            dropZone.addEventListener("drop", handleDrop, false);
+
+            function preventDefaults(e) {
+                e.preventDefault();
+                e.stopPropagation();
+            }
+
+            function highlight(e) {
+                dropZone.classList.add("dragover");
+            }
+
+            function unhighlight(e) {
+                dropZone.classList.remove("dragover");
+            }
+
+            function handleDrop(e) {
+                const dt = e.dataTransfer;
+                const files = dt.files;
+
+                handleFiles(files);
+            }
+
+            function handleFiles(files) {
+                [...files].forEach(createThumbnail);
+            }
+
+            function createThumbnail(file) {
+                if (!file.type.startsWith("image/")) return;
+
+                const img = document.createElement("img");
+                img.classList.add("thumbnail");
+                thumbnailContainer.appendChild(img);
+
+                const reader = new FileReader();
+                reader.onload = (e) => (img.src = e.target.result);
+                reader.readAsDataURL(file);
+            }
+        </script>
+    </body>
+</html>
