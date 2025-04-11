@@ -1,0 +1,19 @@
+# Node.js
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Images
+project/dropServer/images/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+
+# Environment files
+.env
+
+# macOS
+.DS_Store

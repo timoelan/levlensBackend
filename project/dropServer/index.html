@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Drag and Drop</title>
+  <style>
+    #drop-zone {
+      width: 100%;
+      max-width: 400px;
+      height: 200px;
+      border: 2px dashed #ccc;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      margin: 20px auto;
+      color: #aaa;
+    }
+    #thumbnails {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 20px;
+    }
+    .thumbnail {
+      width: 100px;
+      height: 100px;
+      object-fit: cover;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+  </style>
+</head>
+<body>
+  <h1>Drag and Drop Image Upload</h1>
+  <div id="drop-zone">Drag and drop your images here</div>
+  <div id="thumbnails"></div>
+  <input type="text" id="folder-name" placeholder="Enter folder name" />
+  <button id="upload-button">Upload Images</button>
+
+  <script>
+    const dropZone = document.getElementById('drop-zone');
+    const thumbnails = document.getElementById('thumbnails');
+    const uploadButton = document.getElementById('upload-button');
+    const folderNameInput = document.getElementById('folder-name');
+
+    let filesToUpload = [];
+
+    dropZone.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = 'green';
+    });
+
+    dropZone.addEventListener('dragleave', () => {
+      dropZone.style.borderColor = '#ccc';
+    });
+
+    dropZone.addEventListener('drop', (e) => {
+      e.preventDefault();
+      dropZone.style.borderColor = '#ccc';
+
+      const files = e.dataTransfer.files;
+      for (const file of files) {
+        if (file.type.startsWith('image/')) {
+          filesToUpload.push(file);
+
+          const imageUrl = URL.createObjectURL(file);
+          const img = document.createElement('img');
+          img.src = imageUrl;
+          img.className = 'thumbnail';
+          thumbnails.appendChild(img);
+        } else {
+          alert('Only image files are allowed');
+        }
+      }
+    });
+
+    uploadButton.addEventListener('click', async () => {
+      const folderName = folderNameInput.value.trim();
+      if (!folderName) {
+        alert('Please enter a folder name');
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append('folderName', folderName);
+      filesToUpload.forEach((file) => {
+        formData.append('images', file);
+      });
+
+      const response = await fetch('/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
+      if (response.ok) {
+        alert('Images uploaded successfully');
+        filesToUpload = [];
+        thumbnails.innerHTML = '';
+        folderNameInput.value = '';
+      } else {
+        alert('Failed to upload images');
+      }
+    });
+  </script>
+</body>
+</html>

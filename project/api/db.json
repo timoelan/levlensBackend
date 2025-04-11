@@ -1,0 +1,21 @@
+[
+    {
+      "src": "/images/Bentley/Bentley.jpg",
+      "title": "Bentley Continental GT",
+      "description": "A luxury grand tourer.",
+      "additionalImages": [
+        "/images/Bentley/1.jpg",
+        "/images/Bentley/2.jpg"
+      ]
+    },
+    {
+      "src": "/images/MercedesAMGA45/MercedesAMGA45.jpg",
+      "title": "BMW M3",
+      "description": "A high-performance version of the BMW 3 Series.",
+      "additionalImages": [
+        "/images/MercedesAMGA45/1.jpg",
+        "/images/MercedesAMGA45/2.jpg"
+      ]
+    }
+    
+  ]
